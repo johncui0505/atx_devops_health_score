@@ -33,7 +33,7 @@
     path: /api/node/class/fvTenant.json?rsp-subtree-include=health,required&rsp-subtree-filter=le(healthInst.cur,"{{ item.score }}")
     method: get
   with_items: 
-    - score: 100
+    - score: 90
   register: health_tenant
 
 - name: "Export Health Score to JSON format"
