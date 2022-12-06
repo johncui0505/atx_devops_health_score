@@ -1,14 +1,14 @@
 ---
-- name: "查看是否有要发送的文件"
+- name: "Check if message file exists"
   stat: path="roles/call_webex/files/health_report.md"
   register: file_check
 
-- name: "读取文件信息"
+- name: "Read message"
   debug: msg="{{lookup('file', 'health_report.md') }}"
   register:   health_tenant_message
   when: file_check.stat.exists
   
-- name: "通过Webex Teams发送信息" 
+- name: "Send Webex Teams message" 
   cisco_spark:
     recipient_type:   roomId
     recipient_id:     "{{ roomID }}"
@@ -17,7 +17,7 @@
     message:          "{{ health_tenant_message.msg }}"
   when: file_check.stat.exists
 
-- name: "删除数据文件"
+- name: "Delete data file"
   file:
     path: roles/call_webex/files/health_report.md
     state: absent
