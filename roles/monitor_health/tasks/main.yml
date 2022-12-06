@@ -1,5 +1,5 @@
 ---
-- name: "系统健康分数收集"
+- name: "Collect System Health Score"
   aci_rest:
     host:           "{{ aci_host }}"
     user:           "{{ aci_user }}"
@@ -10,7 +10,7 @@
     method: get
   register: health_system
 
-- name: "拓扑健康分数收集"
+- name: "Collect Topology Health Score"
   aci_rest:
     host:           "{{ aci_host }}"
     user:           "{{ aci_user }}"
@@ -23,7 +23,7 @@
     - score: 100
   register: health_topology
 
-- name: "各个Tenant健康分数收集"
+- name: "Collect Tenant Health Score"
   aci_rest:
     host:           "{{ aci_host }}"
     user:           "{{ aci_user }}"
@@ -36,7 +36,7 @@
     - score: 100
   register: health_tenant
 
-- name: "把健康分数以JSON形式存储"
+- name: "Export Health Score to JSON format"
   copy:
     content: "{{ item.content | to_nice_json}}"
     dest:    "{{ item.dest }}"
@@ -49,11 +49,11 @@
     - content: "{{ health_tenant }}"
       dest:    "roles/monitor_health/files/health_tenant.json"
 
-- name: "查看是否要发送该信息"
+- name: "Check Result"
   script: check.py
   register: check_result
 
-- name: "把收集的信息以Webex Team识别的MD形式存储"
+- name: "Convert data to Markdown format to send Webex"
   template: 
     src:  "template/health_report.j2"
     dest: "roles/call_webex/files/health_report.md"
